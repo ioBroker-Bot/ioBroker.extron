@@ -385,8 +385,6 @@ class Extron extends utils.Adapter {
             this.device.connectionState = 'CONNECTED';
             this.device.timeToWait = 0;
             this.device.timeoutPolling = 0; // next timercycle there will be a polling
-            // this.setState('info.connection', true, true);
-            // this.timers.timeoutQueryStatus = setTimeout(this.queryStatus.bind(this), this.config.pollDelay);    // start polling the device
         } catch (err) {
             this.errorHandler(err, 'onClientReady');
         }
@@ -411,6 +409,10 @@ class Extron extends utils.Adapter {
         try {
             this.log.info('onClientClose(): Extron SSH client closed');
             // Reset the connection indicator
+            if (this.objectExists(`${this.instance}.dante`)) {
+                this.setState('dante.available', '[]', true);
+                this.setState('dante.connected', '[]', true);
+            }
             this.setState('info.connection', false, true);
             this.clientReady = false;
             this.isDeviceChecked = false; // will be true if device sends banner and will be verified
